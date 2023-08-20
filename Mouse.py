@@ -10,22 +10,22 @@ class Mouse():
         self.frame_r = camera.frame_r
         self.w_cam = camera.w_cam
         self.h_cam = camera.h_cam
-        self.smothening = camera.smoothening
+        self.smoothening = camera.smoothening
         self.w_scr, self.h_scr = camera.get_screen_details()
 
     
-    def move(self):
+    def move(self, img):
         p_loc_x, p_loc_y = 0, 0
         c_loc_x, c_loc_y = 0, 0
 
-        x3 = np.interp(x1, (self.frame_r, self.w_cam - self.frame_r), (0, self.w_scr))
-        y3 = np.interp(y1, (self.frame_r, self.h_cam - self.frame_r), (0, self.h_scr))
+        x3 = np.interp(self.x1, (self.frame_r, self.w_cam - self.frame_r), (0, self.w_scr))
+        y3 = np.interp(self.y1, (self.frame_r, self.h_cam - self.frame_r), (0, self.h_scr))
         # smoothen values
         c_loc_x = p_loc_x + (x3 - p_loc_x) / self.smoothening
         c_loc_y = p_loc_y + (y3 - p_loc_y) / self.smoothening
         # move mouse
-        autopy.mouse.move(w_scr - c_loc_x, c_loc_y)
-        cv2.circle(img, (x1, y1), 15, (255, 0 ,255), cv2.FILLED)
+        autopy.mouse.move(self.w_scr - c_loc_x, c_loc_y)
+        cv2.circle(img, (self.x1,self. y1), 15, (255, 0 ,255), cv2.FILLED)
         p_loc_x, p_loc_y = c_loc_x, c_loc_y
     
     def click(self, length, img, line_info):

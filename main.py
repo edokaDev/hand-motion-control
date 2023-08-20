@@ -1,10 +1,10 @@
 import cv2
 import HandDetector as hd
-import Camera
-import Mouse
+import Camera as cm
+import Mouse as ms
 import time
 
-camera = Camera(frame_r=100,w_cam=640,h_cam=480,smoothening = 10)
+camera = cm.Camera()
 cap = camera.start_cam()
 
 pTime = 0
@@ -23,16 +23,16 @@ while True:
 	if len(lm_list) != 0:
 		x1, y1 = lm_list[8 ][1:]
 		x2, y2 = lm_list[12][1:]
-		mouse = Mouse(x1, y1, camera)
+		mouse = ms.Mouse(x1, y1, camera)
 
 		# check which fingers are up
 		fingers = detector.fingers_up()
 		# print(fingers)
-		cv2.rectangle(img, (frame_r, frame_r), (w_cam - frame_r, h_cam - frame_r),
+		cv2.rectangle(img, (camera.frame_r, camera.frame_r), (camera.w_cam - camera.frame_r, camera.h_cam - camera.frame_r),
 						(255, 0, 255), 2)
 		# only index finger = moving mode
 		if fingers[1] == 1 and fingers[2] == 0:
-			mouse.move()
+			mouse.move(img)
 		# 8. both index and middle fingers are up = clicking mode
 		if fingers[1] == 1 and fingers[2] == 1:
 			length, img, line_info = detector.find_distance(8, 12, img)
