@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-import HandDetector as hd
-import time
 import autopy
 
 

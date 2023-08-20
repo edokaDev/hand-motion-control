@@ -1,10 +1,8 @@
 import cv2
-import numpy as np
 import HandDetector as hd
 import Camera
 import Mouse
 import time
-import autopy
 
 camera = Camera(frame_r=100,w_cam=640,h_cam=480,smoothening = 10)
 cap = camera.start_cam()
