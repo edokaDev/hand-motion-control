@@ -1,16 +1,24 @@
 import cv2
 import HandDetector as hd
-import Camera
-import Mouse
+import Camera as cm
+import Mouse as ms
 import time
+import numpy as np
 
-camera = Camera(frame_r=100,w_cam=640,h_cam=480,smoothening = 10)
+camera = cm.Camera()
+mouse = ms.Mouse()
 cap = camera.start_cam()
 
 pTime = 0
+p_loc_x, p_loc_y = 0, 0
+c_loc_x, c_loc_y = 0, 0
 
 detector = hd.HandDetector(maxHands=1)
-# screen size
+
+w_scr, h_scr = camera.get_screen_details()
+frame_r = camera.frame_r
+w_cam = camera.w_cam
+h_cam = camera.h_cam
 
 while True:
 	# find hand landmarks
@@ -21,22 +29,48 @@ while True:
 
 	# get the tip of the index and middle fingers
 	if len(lm_list) != 0:
-		x1, y1 = lm_list[8 ][1:]
+		x1, y1 = lm_list[8][1:]
 		x2, y2 = lm_list[12][1:]
-		mouse = Mouse(x1, y1, camera)
 
 		# check which fingers are up
 		fingers = detector.fingers_up()
 		# print(fingers)
-		cv2.rectangle(img, (frame_r, frame_r), (w_cam - frame_r, h_cam - frame_r),
+		cv2.rectangle(img, (camera.frame_r, camera.frame_r), (camera.w_cam - camera.frame_r, camera.h_cam - camera.frame_r),
 						(255, 0, 255), 2)
-		# only index finger = moving mode
-		if fingers[1] == 1 and fingers[2] == 0:
-			mouse.move()
-		# 8. both index and middle fingers are up = clicking mode
-		if fingers[1] == 1 and fingers[2] == 1:
+
+		# 7. Move 
+
+		# MOVE GESTURE 1: ONLY INDEX FINGER UP
+		# if fingers[1] == 1 and fingers[2] == 0:
+
+		# MOVE GESTURE 2: ALL FINGERS UP
+		if fingers[0] == 1 and fingers[1] == 1 and fingers[2] == 1 and fingers[3] == 1 and fingers[4] == 1:
+			# 5.convert coordinates
+			x3 = np.interp(x1, (frame_r, w_cam - frame_r), (0, w_scr))
+			y3 = np.interp(y1, (frame_r, h_cam - frame_r), (0, h_scr))
+			# 6. smoothen values
+			c_loc_x = p_loc_x + (x3 - p_loc_x) / camera.smoothening
+			c_loc_y = p_loc_y + (y3 - p_loc_y) / camera.smoothening
+			# 7. move mouse
+			mouse.move(w_scr - c_loc_x, c_loc_y)
+			cv2.circle(img, (x1, y1), 15, (255, 0 ,255), cv2.FILLED)
+			p_loc_x, p_loc_y = c_loc_x, c_loc_y
+
+
+		# 8. Click
+
+		# CLICK GESTURE 1: INDEX AND MIDDLE FINGER UP AND JOINED TOGETHER
+		# if fingers[1] == 1 and fingers[2] == 1:
+		# CLICK GESTURE 2: MAKE A FIST (ALL FINGERS DOWN)
+		if fingers[0] == 0 and fingers[1] == 0 and fingers[2] == 0 and fingers[3] == 0 and fingers[4] == 0:
+			# 9. find distance between finger
 			length, img, line_info = detector.find_distance(8, 12, img)
-			mouse.click(length, img, line_info)
+			# print(length)
+			# 10. click mous if distance is short
+			if length < 50:
+				cv2.circle(img, (line_info[4], line_info[5]),
+	       					15, (0, 255,0), cv2.FILLED)
+				mouse.click()
 
 	# frame rate
 	cTime = time.time()
