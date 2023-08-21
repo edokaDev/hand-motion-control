@@ -1,5 +1,7 @@
 absl-py==1.4.0
+altgraph==0.17.3
 attrs==23.1.0
+autopy==4.0.0
 cffi==1.15.1
 contourpy==1.1.0
 cycler==0.11.0
@@ -18,11 +20,13 @@ numpy==1.24.4
 opencv-contrib-python==4.8.0.76
 opencv-python==4.8.0.76
 packaging==23.1
+pefile==2023.2.7
 Pillow==10.0.0
 protobuf==3.20.3
-PyAutoGUI==0.9.54
 pycparser==2.21
 PyGetWindow==0.0.9
+pyinstaller==5.13.0
+pyinstaller-hooks-contrib==2023.7
 PyMsgBox==1.0.9
 pyparsing==3.0.9
 pyperclip==1.8.2
@@ -32,6 +36,7 @@ PyScreeze==0.1.29
 python-dateutil==2.8.2
 python3-xlib==0.15
 pytweening==1.0.7
+pywin32-ctypes==0.2.2
 six==1.16.0
 sounddevice==0.4.6
 zipp==3.16.2

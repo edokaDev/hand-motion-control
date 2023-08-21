@@ -13,7 +13,7 @@ pTime = 0
 p_loc_x, p_loc_y = 0, 0
 c_loc_x, c_loc_y = 0, 0
 
-detector = hd.HandDetector(maxHands=1)
+detector = hd.HandDetector()
 
 w_scr, h_scr = camera.get_screen_details()
 frame_r = camera.frame_r
