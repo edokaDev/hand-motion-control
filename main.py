@@ -1,7 +1,7 @@
 import cv2
-import HandDetector as hd
-import Camera as cm
-import Mouse as ms
+from classes import HandDetector as hd
+from classes import Camera as cm
+from classes import Mouse as ms
 import time
 import numpy as np
 
